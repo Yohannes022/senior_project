@@ -11,7 +11,7 @@ interface RouteCardProps {
   isSelected?: boolean;
 }
 
-const RouteCard: React.FC<RouteCardProps> = ({ route, onSelect, isSelected = false }) => {
+export const RouteCard: React.FC<RouteCardProps> = ({ route, onSelect, isSelected = false }) => {
   const formatTime = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

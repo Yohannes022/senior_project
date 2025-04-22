@@ -9,7 +9,7 @@ interface SeatSelectorProps {
   selectedSeat: string | null;
 }
 
-const SeatSelector: React.FC<SeatSelectorProps> = ({ 
+export const SeatSelector: React.FC<SeatSelectorProps> = ({ 
   availableSeats, 
   onSelectSeat,
   selectedSeat 

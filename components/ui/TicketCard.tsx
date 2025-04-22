@@ -9,7 +9,7 @@ interface TicketCardProps {
   ticket: Ticket;
 }
 
-const TicketCard: React.FC<TicketCardProps> = ({ ticket }) => {
+export const TicketCard: React.FC<TicketCardProps> = ({ ticket }) => {
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleDateString([], { 

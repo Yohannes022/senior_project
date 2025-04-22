@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { trpcServer } from "@hono/trpc-server";
 import { cors } from "hono/cors";
-import { appRouter } from "./trcp/app-router";
-import { createContext } from "./trcp/create-context";
+import { appRouter } from "./trpc/app-router";
+import { createContext } from "./trpc/create-context";
 
 // app will be mounted at /api
 const app = new Hono();

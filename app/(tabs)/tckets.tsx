@@ -7,7 +7,7 @@ import theme from '@/constants/theme';
 import useAppStore from '@/store/useAppStore';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import TicketCard from '@/components/ui/TicketCard';
+import {TicketCard} from '@/components/ui/TicketCard';
 
 export default function TicketsScreen() {
   const router = useRouter();

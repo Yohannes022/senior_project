@@ -7,7 +7,7 @@ import theme from '@/constants/theme';
 import useAppStore from '@/store/useAppStore';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import RouteCard from '@/components/ui/RouteCard';
+import {RouteCard} from '@/components/ui/RouteCard';
 import { Location } from '@/types';
 
 export default function RoutesScreen() {

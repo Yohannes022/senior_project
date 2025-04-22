@@ -19,7 +19,7 @@ import useAppStore from '@/store/useAppStore';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Route, RouteSegment, Seat } from '@/types';
-import SeatSelector from '@/components/ui/SeatSelector';
+import {SeatSelector} from '@/components/ui/SeatSelector';
 
 export default function RouteDetailsScreen() {
   const router = useRouter();
