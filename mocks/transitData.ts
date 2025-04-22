@@ -217,7 +217,7 @@ export const sampleRoutes = [
     id: 'route1',
     segments: [
       {
-        type: 'walk',
+        type: 'walk' as const,
         duration: 5,
         distance: 400,
         from: {
@@ -232,7 +232,7 @@ export const sampleRoutes = [
         }
       },
       {
-        type: 'transit',
+        type: 'transit' as const,
         duration: 12,
         route: transitRoutes[0],
         from: {
@@ -249,7 +249,7 @@ export const sampleRoutes = [
         arrivalTime: new Date(Date.now() + 17 * 60000).toISOString()
       },
       {
-        type: 'walk',
+        type: 'walk' as const,
         duration: 3,
         distance: 250,
         from: {
@@ -275,7 +275,7 @@ export const sampleRoutes = [
     id: 'route2',
     segments: [
       {
-        type: 'walk',
+        type: 'walk' as const,
         duration: 7,
         distance: 550,
         from: {
@@ -290,7 +290,7 @@ export const sampleRoutes = [
         }
       },
       {
-        type: 'transit',
+        type: 'transit' as const,
         duration: 8,
         route: transitRoutes[2],
         from: {
@@ -307,7 +307,7 @@ export const sampleRoutes = [
         arrivalTime: new Date(Date.now() + 15 * 60000).toISOString()
       },
       {
-        type: 'walk',
+        type: 'walk' as const,
         duration: 4,
         distance: 300,
         from: {
@@ -334,7 +334,7 @@ export const sampleRoutes = [
 export const sampleTickets = [
   {
     id: 'ticket1',
-    type: 'single',
+    type: 'single' as const,
     validFrom: new Date().toISOString(),
     validUntil: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
     routes: ['route1', 'route2', 'route3', 'route4', 'route5'],
@@ -345,7 +345,7 @@ export const sampleTickets = [
   },
   {
     id: 'ticket2',
-    type: 'day',
+    type: 'day' as const,
     validFrom: new Date().toISOString(),
     validUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     routes: ['route1', 'route2', 'route3', 'route4', 'route5'],
@@ -356,7 +356,7 @@ export const sampleTickets = [
   },
   {
     id: 'ticket3',
-    type: 'week',
+    type: 'week' as const,
     validFrom: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     validUntil: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
     routes: ['route1', 'route2', 'route3', 'route4', 'route5'],
@@ -373,7 +373,7 @@ export const rideHistory = [
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     route: sampleRoutes[0],
     fare: 25,
-    status: 'completed',
+    status: 'completed' as const,
     seatNumber: 'A15'
   },
   {
@@ -381,7 +381,7 @@ export const rideHistory = [
     date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
     route: sampleRoutes[1],
     fare: 20,
-    status: 'completed',
+    status: 'completed' as const,
     seatNumber: 'B22'
   },
   {
@@ -389,7 +389,7 @@ export const rideHistory = [
     date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
     route: sampleRoutes[0],
     fare: 25,
-    status: 'upcoming',
+    status: 'upcoming' as const,
     seatNumber: 'C10'
   }
 ];

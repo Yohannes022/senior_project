@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TransitVehicle, TransitRoute } from '@/types';
-import { Bus, Train, Tram, Ship } from 'lucide-react-native';
+import { Bus, Train, Ship } from 'lucide-react-native';
 import theme from '@/constants/theme';
 
 interface TransitVehicleMarkerProps {
@@ -26,7 +26,7 @@ const TransitVehicleMarker: React.FC<TransitVehicleMarkerProps> = ({
       case 'subway':
         return <Train size={iconSize} color={iconColor} />;
       case 'tram':
-        return <Tram size={iconSize} color={iconColor} />;
+        return <Train size={iconSize} color={iconColor} />;
       case 'ferry':
         return <Ship size={iconSize} color={iconColor} />;
       default:

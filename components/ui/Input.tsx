@@ -69,8 +69,8 @@ const Input: React.FC<InputProps> = ({
         <TextInput
           style={[
             styles.input,
-            leftIcon && styles.inputWithLeftIcon,
-            (rightIcon || (clearable && value)) && styles.inputWithRightIcon,
+            leftIcon ? styles.inputWithLeftIcon : null,
+            (rightIcon || (clearable && value)) ? styles.inputWithRightIcon : null,
             inputStyle
           ]}
           value={value}

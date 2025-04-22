@@ -26,7 +26,7 @@ export const SeatSelector: React.FC<SeatSelectorProps> = ({
       const seatNumber = `${String.fromCharCode(64 + row)}${col < 3 ? col : col - 2}`;
       
       // Determine if seat is available (some logic to make some seats unavailable)
-      const isAvailable = seats.length < availableSeats && 
+      const isAvailable: boolean = seats.length < availableSeats && 
         !(row === 2 && col === 2) && // Example of specific unavailable seats
         !(row === 4 && col === 3) &&
         !(row === 6 && col === 1) &&

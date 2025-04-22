@@ -56,7 +56,7 @@ export default function PaymentScreen() {
       
       const newTicket = {
         id: `ticket-${Date.now()}`,
-        type: selectedTicketType.id,
+        type: selectedTicketType.id as "single" | "return" | "day" | "week" | "month",
         validFrom: now.toISOString(),
         validUntil: validUntil.toISOString(),
         routes: ['route1', 'route2', 'route3', 'route4', 'route5'],

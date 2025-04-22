@@ -131,7 +131,12 @@ const Button: React.FC<ButtonProps> = ({
       ) : (
         <>
           {leftIcon && <React.Fragment>{leftIcon}</React.Fragment>}
-          <Text style={[getTextStyles(), leftIcon && { marginLeft: theme.spacing.xs }, rightIcon && { marginRight: theme.spacing.xs }, textStyle]}>
+          <Text style={[
+            getTextStyles(), 
+            leftIcon ? { marginLeft: theme.spacing.xs } : null,
+            rightIcon ? { marginRight: theme.spacing.xs } : null,
+            textStyle
+          ]}>
             {title}
           </Text>
           {rightIcon && <React.Fragment>{rightIcon}</React.Fragment>}
