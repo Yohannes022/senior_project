@@ -2,13 +2,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { Platform, StatusBar } from "react-native";
+import { useEffect, useState } from "react";
+import { Platform, StatusBar, View, Text, ActivityIndicator } from "react-native";
 import { ErrorBoundary } from "./error-boundary";
 import useAppStore from "@/store/useAppStore";
 import theme from "@/constants/theme";
 import { trpc, trpcClient } from "@/lib/trpc";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -24,22 +25,36 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     ...FontAwesome.font,
   });
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (error) {
       console.error(error);
-      throw error;
     }
   }, [error]);
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().then(() => {
+        setIsReady(true);
+      });
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
+  if (!loaded || !isReady) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+        <Text style={{ color: theme.colors.text }}>Error loading fonts</Text>
+      </View>
+    );
   }
 
   return (
