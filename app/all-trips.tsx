@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
-import { ChevronLeft, Calendar, Clock, ArrowRight } from "lucide-react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "@/constants/colors";
 import { recentTrips } from "@/constants/mockData";
 
@@ -36,13 +36,13 @@ export default function AllTripsScreen() {
         <View>
           <Text style={styles.tripRoute}>{item.from} to {item.to}</Text>
           <View style={styles.tripTimeContainer}>
-            <Calendar size={14} color={Colors.textLight} />
+            <Ionicons name="calendar" size={14} color={Colors.textLight} />
             <Text style={styles.tripTimeText}>{item.date}</Text>
-            <Clock size={14} color={Colors.textLight} />
+            <Ionicons name="time" size={14} color={Colors.textLight} />
             <Text style={styles.tripTimeText}>{item.time}</Text>
           </View>
         </View>
-        <ArrowRight size={16} color={Colors.textLight} />
+        <Ionicons name="arrow-forward" size={16} color={Colors.textLight} />
       </View>
       
       <View style={styles.tripFooter}>
@@ -61,7 +61,7 @@ export default function AllTripsScreen() {
           title: "My Trips",
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
-              <ChevronLeft size={24} color={Colors.text} />
+              <Ionicons name="chevron-back" size={24} color={Colors.text} />
             </TouchableOpacity>
           ),
         }} 

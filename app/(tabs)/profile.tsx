@@ -24,8 +24,27 @@ const ProfileMenuItem = ({ icon, title, subtitle, rightElement, onPress }: any) 
 export default function ProfileScreen() {
   const router = useRouter();
 
-  const handleNavigation = (route: string) => {
-    router.push(route);
+  // Define valid route names as a type
+  type AppRoute = 
+    | '/all-trips'
+    | '/booking'
+    | '/destination'
+    | '/directions'
+    | '/rewards'
+    | '/search'
+    | '/trip-details'
+    | '/(tabs)/profile'
+    | '/(tabs)/map'
+    | '/(tabs)/schedule'
+    | '/edit-profile'
+    | '/payment-methods'
+    | '/notifications'
+    | '/settings'
+    | '/help'
+    | `/saved-location?id=${string}`;
+
+  const handleNavigation = (route: AppRoute) => {
+    router.push(route as any);
   };
 
   return (

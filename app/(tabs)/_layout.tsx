@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Home, Calendar, MapPin, User } from "lucide-react-native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/colors";
 
 export default function TabLayout() {
@@ -26,28 +26,28 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <Home size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="schedule"
         options={{
           title: "Schedule",
-          tabBarIcon: ({ color }) => <Calendar size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="calendar" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="map"
         options={{
           title: "Map",
-          tabBarIcon: ({ color }) => <MapPin size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="map" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <User size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="person" size={24} color={color} />,
         }}
       />
     </Tabs>

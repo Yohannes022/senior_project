@@ -6,7 +6,7 @@ import Colors from "@/constants/colors";
 
 import ProfileHeader from "@/components/ProfileHeader";
 import TripPlanner from "@/components/TripPlanner";
-import NearbyVehicles from "@/components/NearbyVehicles";
+import NearbyVehicles from "@/components/NearbyVehicls";
 import RecentTrips from "@/components/RecentTrips";
 import PopularDestinations from "@/components/PopularDestinations";
 import UserPoints from "@/components/UserPoints";
