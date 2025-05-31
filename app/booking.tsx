@@ -13,7 +13,7 @@ export default function BookingScreen() {
 
   const handleBooking = () => {
     // In a real app, this would process the booking
-    router.push("/(tabs)");
+    router.back();
   };
 
   return (

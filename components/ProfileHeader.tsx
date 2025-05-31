@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Settings } from "lucide-react-native";
+import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
 import { userProfile } from "@/constants/mockData";
 
@@ -9,6 +10,16 @@ type ProfileHeaderProps = {
 };
 
 export default function ProfileHeader({ onSettingsPress }: ProfileHeaderProps) {
+  const router = useRouter();
+  
+  const handleSettingsPress = () => {
+    if (onSettingsPress) {
+      onSettingsPress();
+    } else {
+      // @ts-ignore - We know this route exists
+      router.push("/(tabs)/profile");
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.profileInfo}>
@@ -23,7 +34,7 @@ export default function ProfileHeader({ onSettingsPress }: ProfileHeaderProps) {
         </View>
       </View>
       
-      <TouchableOpacity style={styles.settingsButton} onPress={onSettingsPress}>
+      <TouchableOpacity style={styles.settingsButton} onPress={handleSettingsPress}>
         <Settings size={22} color={Colors.text} />
       </TouchableOpacity>
     </View>

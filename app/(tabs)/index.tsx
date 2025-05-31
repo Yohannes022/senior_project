@@ -3,6 +3,9 @@ import { StyleSheet, ScrollView, View, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Colors from "@/constants/colors";
+import { Link } from "expo-router";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import ProfileHeader from "@/components/ProfileHeader";
 import TripPlanner from "@/components/TripPlanner";
@@ -29,7 +32,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
-      <ProfileHeader onSettingsPress={() => router.push("/(tabs)/profile")} />
+      <ProfileHeader />
       
       <ScrollView 
         showsVerticalScrollIndicator={false}

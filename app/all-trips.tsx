@@ -30,7 +30,13 @@ export default function AllTripsScreen() {
   const renderTripItem = ({ item }: { item: typeof recentTrips[0] }) => (
     <TouchableOpacity 
       style={styles.tripCard}
-      onPress={() => router.push(`/trip-details?id=${item.id}`)}
+      onPress={() => {
+        const params = { id: item.vehicleId || '1' };
+        router.push({
+          pathname: '/(tabs)/vehicle-details',
+          params,
+        } as any);
+      }}
     >
       <View style={styles.tripHeader}>
         <View>

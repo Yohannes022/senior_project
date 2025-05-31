@@ -1,27 +1,28 @@
 import React from "react";
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/colors";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.inactive,
-        tabBarStyle: {
-          borderTopWidth: 1,
-          borderTopColor: Colors.border,
-          height: 60,
-          paddingBottom: 8,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "500",
-        },
-        headerShown: false,
-      }}
-    >
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors.primary,
+          tabBarInactiveTintColor: Colors.inactive,
+          tabBarStyle: {
+            borderTopWidth: 1,
+            borderTopColor: Colors.border,
+            height: 60,
+            paddingBottom: 8,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "500",
+          },
+          headerShown: false,
+        }}
+      >
       <Tabs.Screen
         name="index"
         options={{
@@ -50,6 +51,21 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Ionicons name="person" size={24} color={color} />,
         }}
       />
-    </Tabs>
+      </Tabs>
+      
+      {/* Non-tab screens */}
+      <Stack.Screen 
+        name="vehicle-details" 
+        options={{ 
+          title: 'Vehicle Details',
+          headerShown: true,
+          headerBackTitle: 'Back',
+          headerTintColor: Colors.primary,
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} 
+      />
+    </>
   );
 }
