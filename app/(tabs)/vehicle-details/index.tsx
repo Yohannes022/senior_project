@@ -287,24 +287,24 @@ export default function VehicleDetails() {
     </View>
   );
 
-  const renderStat = (label: string, value: number) => {
-    const width = (value / 5) * 100;
-    
+  const renderStat = (label: string, value: number | undefined) => {
+    // Provide a default value if value is undefined
+    const displayValue = value ?? 0;
     return (
-      <View style={styles.statItem}>
+      <View key={label} style={styles.statItem}>
         <Text style={styles.statLabel}>{label}</Text>
         <View style={styles.statBarContainer}>
           <View 
             style={[
               styles.statBar, 
-              { width: `${width}%` as any },
-              value >= 4 ? styles.statBarHigh : 
-              value >= 3 ? styles.statBarMedium : 
+              { width: `${(displayValue / 5) * 100}%` },
+              displayValue >= 4 ? styles.statBarHigh : 
+              displayValue >= 3 ? styles.statBarMedium : 
               styles.statBarLow
             ]} 
           />
         </View>
-        <Text style={styles.statValue}>{value.toFixed(1)}</Text>
+        <Text style={styles.statValue}>{displayValue.toFixed(1)}</Text>
       </View>
     );
   };
