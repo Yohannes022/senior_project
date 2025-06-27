@@ -1,9 +1,11 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   name: string;
+  phoneNumber?: string;
+  avatar?: string;
   // Add other user properties as needed
 }
 
@@ -46,6 +48,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         id: '1',
         email,
         name: 'Demo User',
+        phoneNumber: '+251911223344',
+        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
       });
       return true;
     } catch (error) {
