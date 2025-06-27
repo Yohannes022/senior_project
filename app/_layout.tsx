@@ -5,6 +5,7 @@ import { View, Text } from "react-native";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import Colors from "@/constants/colors";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -34,7 +35,11 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
+  );
 }
 
 function RootLayoutNav() {
