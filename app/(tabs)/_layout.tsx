@@ -34,15 +34,16 @@ export default function TabLayout() {
           tabBarStyle: {
             borderTopWidth: StyleSheet.hairlineWidth,
             borderTopColor: Colors.border,
-            height: 65,
+            height: 75,
             paddingTop: 8,
             paddingBottom: 8,
+            paddingHorizontal: 14,
           },
           tabBarLabelStyle: {
             fontSize: 10,
             fontWeight: "600",
           },
-          headerShown: false,
+          headerShown: true,
         }}
       >
       <Tabs.Screen

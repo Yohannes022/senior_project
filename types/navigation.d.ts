@@ -1,6 +1,24 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-export type RootStackParamList = {
+type Routes = {
+  // Tabs
+  '(tabs)': NavigatorScreenParams<TabParamList>;
+  
+  // Auth
+  'login': undefined;
+  'register': undefined;
+  'forgot-password': undefined;
+  
+  // Help & Support
+  'help': undefined;
+  'report-lost-item': undefined;
+  'emergency': undefined;
+  
+  // Other screens
+  [key: string]: any; // This allows any string key with any value
+};
+
+export type RootStackParamList = Routes & {
   // Tabs
   '(tabs)': NavigatorScreenParams<TabParamList>;
   
@@ -32,6 +50,8 @@ export type RootStackParamList = {
   'profile': undefined;
   'notifications': undefined;
   'help': undefined;
+  'report-lost-item': undefined;
+  'emergency': undefined;
 };
 
 export type TabParamList = {

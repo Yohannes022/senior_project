@@ -41,6 +41,7 @@ export default function ProfileScreen() {
     | '/notifications'
     | '/settings'
     | '/help'
+    | '/saved-places'
     | `/saved-location?id=${string}`;
 
   const handleNavigation = (route: AppRoute) => {
@@ -92,9 +93,14 @@ export default function ProfileScreen() {
         </TouchableOpacity>
         
         <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>Saved Places</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Saved Places</Text>
+            <TouchableOpacity onPress={() => handleNavigation('/saved-places')}>
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
           
-          {userProfile.savedLocations.map((location) => (
+          {userProfile.savedLocations.slice(0, 2).map((location) => (
             <ProfileMenuItem
               key={location.id}
               icon={<MapPin size={20} color={Colors.primary} />}
@@ -103,6 +109,15 @@ export default function ProfileScreen() {
               onPress={() => handleNavigation(`/saved-location?id=${location.id}`)}
             />
           ))}
+          
+          {userProfile.savedLocations.length > 2 && (
+            <TouchableOpacity 
+              style={styles.viewAllButton}
+              onPress={() => handleNavigation('/saved-places')}
+            >
+              <Text style={styles.viewAllButtonText}>+{userProfile.savedLocations.length - 2} more places</Text>
+            </TouchableOpacity>
+          )}
         </View>
         
         <View style={styles.menuSection}>
@@ -282,6 +297,29 @@ const styles = StyleSheet.create({
   menuSection: {
     marginTop: 24,
     paddingHorizontal: 16,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  viewAllText: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontFamily: 'outfit-medium',
+  },
+  viewAllButton: {
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+    marginTop: 4,
+  },
+  viewAllButtonText: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontFamily: 'outfit-medium',
   },
   sectionTitle: {
     fontSize: 18,

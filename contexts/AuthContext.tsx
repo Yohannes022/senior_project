@@ -6,6 +6,8 @@ export interface User {
   name: string;
   phoneNumber?: string;
   avatar?: string;
+  dateOfBirth?: Date;
+  address?: string;
   // Add other user properties as needed
 }
 
