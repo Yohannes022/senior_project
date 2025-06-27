@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import 'react';
 
 declare global {
   namespace ReactNavigation {
@@ -16,3 +17,6 @@ type TabsParamList = {
   profile: undefined;
   'vehicle-details': { id: string };
 };
+
+declare const _default: () => JSX.Element;
+export default _default;

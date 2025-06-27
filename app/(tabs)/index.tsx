@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ProfileHeader from "@/components/ProfileHeader";
 import TripPlanner from "@/components/TripPlanner";
 import NearbyVehicles from "@/components/NearbyVehicls";
+import TerminalVehicles from "@/components/TerminalVehicles";
 import RecentTrips from "@/components/RecentTrips";
 import PopularDestinations from "@/components/PopularDestinations";
 import UserPoints from "@/components/UserPoints";
@@ -19,6 +20,14 @@ export default function HomeScreen() {
 
   const handleBooking = () => {
     router.push("/booking");
+  };
+
+  const handleVehicleSelect = (vehicle: any) => {
+    // Navigate to vehicle details page with the selected vehicle's id
+    router.push({
+      pathname: '/(tabs)/vehicle-details/[id]',
+      params: { id: vehicle.id }
+    });
   };
 
   const handleTripDetails = (tripId: string) => {
@@ -40,7 +49,13 @@ export default function HomeScreen() {
       >
         <TripPlanner onPlanTrip={handleBooking} />
         <UserPoints onPress={() => router.push("/rewards")} />
-        <NearbyVehicles onBookNow={handleBooking} />
+        <TerminalVehicles 
+          onVehicleSelect={handleVehicleSelect}
+        />
+        <NearbyVehicles 
+          onBookNow={handleBooking}
+          onVehicleSelect={handleVehicleSelect}
+        />
         <RecentTrips onTripSelect={handleTripDetails} onViewAll={() => router.push("/all-trips")} />
         <PopularDestinations onDestinationSelect={handleDestinationSelect} />
         <View style={styles.bottomPadding} />

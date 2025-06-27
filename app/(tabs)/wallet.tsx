@@ -134,15 +134,7 @@ const WalletScreen = () => {
             <Text style={styles.actionText}>Top Up</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={navigateToSendMoney}
-          >
-            <View style={[styles.actionIcon, { backgroundColor: '#E3F2FD' }]}>
-              <MaterialIcons name="send" size={24} color="#2196F3" />
-            </View>
-            <Text style={styles.actionText}>Send Money</Text>
-          </TouchableOpacity>
+
           
           <TouchableOpacity 
             style={styles.actionButton}
@@ -299,12 +291,13 @@ const styles = StyleSheet.create({
   },
   quickActions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    gap: 40,
     marginTop: 8,
   },
   actionButton: {
     alignItems: 'center',
-    width: '30%',
+    minWidth: 80,
   },
   actionIcon: {
     width: 56,

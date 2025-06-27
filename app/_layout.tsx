@@ -57,17 +57,7 @@ function RootLayoutNav() {
             title: 'Sheger Transit',
           }} 
         />
-        <Stack.Screen 
-          name="vehicle-details/[id]" 
-          options={{ 
-            title: 'Vehicle Details',
-            headerStyle: {
-              backgroundColor: Colors.primary,
-            },
-            headerTintColor: '#fff',
-          }} 
-        />
-        <Stack.Screen 
+<Stack.Screen 
           name="booking" 
           options={{ 
             title: 'Book a Ride',
@@ -88,13 +78,21 @@ function RootLayoutNav() {
           }} 
         />
         <Stack.Screen 
-          name="not-found" 
+          name="add-vehicle" 
           options={{ 
-            title: 'Not Found',
+            title: 'Add Vehicle',
+            headerShown: true,
             headerStyle: {
               backgroundColor: Colors.primary,
             },
             headerTintColor: '#fff',
+          }} 
+        />
+        <Stack.Screen 
+          name="+not-found" 
+          options={{ 
+            title: 'Not Found',
+            headerShown: false,
           }} 
         />
       </Stack>

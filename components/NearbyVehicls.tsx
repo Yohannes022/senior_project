@@ -6,6 +6,7 @@ import { nearbyVehicles } from "@/constants/mockData";
 
 type NearbyVehiclesProps = {
   onBookNow?: (vehicleId: string) => void;
+  onVehicleSelect?: (vehicle: any) => void;
 };
 
 const VehicleIcon = ({ type }: { type: string }) => {
@@ -46,9 +47,12 @@ const getCrowdLevelColor = (level: string) => {
   }
 };
 
-export default function NearbyVehicles({ onBookNow }: NearbyVehiclesProps) {
+export default function NearbyVehicles({ onBookNow, onVehicleSelect }: NearbyVehiclesProps) {
   const renderVehicleItem = ({ item }: { item: typeof nearbyVehicles[0] }) => (
-    <TouchableOpacity style={styles.vehicleCard}>
+    <TouchableOpacity 
+      style={styles.vehicleCard}
+      onPress={() => onVehicleSelect && onVehicleSelect(item)}
+    >
       <View style={styles.vehicleHeader}>
         <VehicleIcon type={item.type} />
         <View style={styles.vehicleInfo}>
@@ -91,7 +95,10 @@ export default function NearbyVehicles({ onBookNow }: NearbyVehiclesProps) {
       
       <TouchableOpacity 
         style={styles.bookButton}
-        onPress={() => onBookNow && onBookNow(item.id)}
+        onPress={(e) => {
+          e.stopPropagation(); // Prevent triggering the parent onPress
+          onBookNow && onBookNow(item.id);
+        }}
       >
         <Text style={styles.bookButtonText}>Book Now</Text>
       </TouchableOpacity>
