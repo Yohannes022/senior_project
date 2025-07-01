@@ -3925,6 +3925,11 @@ expo-notifications@^0.31.3:
     expo-application "~6.1.4"
     expo-constants "~17.1.6"
 
+expo-print@^14.1.4:
+  version "14.1.4"
+  resolved "https://registry.yarnpkg.com/expo-print/-/expo-print-14.1.4.tgz#ff184e1efbc3c61ca896894e85f0e842d96940ba"
+  integrity sha512-qcXdvgwtjgFxX92pd3vdZXZRiFAMysVrCJWrPQvZOSw9OjxeczTOUjcAXRdAC2qFki8Gq/eCnKozSxYN5QCFxw==
+
 expo-router@~5.0.6:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/expo-router/-/expo-router-5.0.7.tgz#032c1de9d06237664169959f7178a818d7b0e677"
@@ -3949,6 +3954,11 @@ expo-secure-store@^14.2.3:
   version "14.2.3"
   resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-14.2.3.tgz#8e74da512e671cec5f7b88679def3d54b59cd49d"
   integrity sha512-hYBbaAD70asKTFd/eZBKVu+9RTo9OSTMMLqXtzDF8ndUGjpc6tmRCoZtrMHlUo7qLtwL5jm+vpYVBWI8hxh/1Q==
+
+expo-sharing@^13.1.5:
+  version "13.1.5"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-13.1.5.tgz#73d86cdcc037b46ddc82be224dfd3d6bceec497c"
+  integrity sha512-X/5sAEiWXL2kdoGE3NO5KmbfcmaCWuWVZXHu8OQef7Yig4ZgHFkGD11HKJ5KqDrDg+SRZe4ISd6MxE7vGUgm4w==
 
 expo-splash-screen@~0.30.8:
   version "0.30.8"

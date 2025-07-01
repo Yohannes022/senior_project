@@ -1,3 +1,5 @@
+export type PaymentProvider = 'chapa' | 'flutterwave';
+
 export interface PaymentReceipt {
   id: string;
   amount: number;
@@ -22,7 +24,7 @@ export interface PaymentVerification {
   amount: number;
   currency: string;
   timestamp: Date | string;
-  provider: 'chapa' | 'flutterwave';
+  provider: PaymentProvider;
 }
 
 export interface PaymentRequest {

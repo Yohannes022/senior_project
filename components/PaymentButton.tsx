@@ -44,7 +44,7 @@ export const PaymentButton: React.FC<PaymentButtonProps> = ({
   const handlePayment = async () => {
     try {
       const result = await initializePayment(provider, amount, email);
-      if (!result.success) {
+      if (result.status === 'failed') {
         onError?.(new Error(result.message || 'Payment initialization failed'));
       }
     } catch (err) {
