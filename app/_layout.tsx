@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import Colors from "@/constants/colors";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useUserPreferences } from "@/hooks/useUserPreferences";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",

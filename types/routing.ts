@@ -145,48 +145,69 @@ export interface RouteOption extends Route {
   };
 }
 
+// Base accessibility settings for physical mobility
+export interface PhysicalAccessibility {
+  wheelchair?: boolean;
+  stepFreeAccess?: boolean;
+  elevatorFreeAccess?: boolean;
+}
+
+// Visual and auditory accessibility settings
+export interface VisualAccessibility {
+  fontSize: 'small' | 'medium' | 'large';
+  highContrast: boolean;
+  screenReader: boolean;
+}
+
+// Notification preferences
+export interface NotificationPreferences {
+  email?: boolean;
+  push?: boolean;
+  sms?: boolean;
+}
+
+// Transport modes
+export interface TransportModes {
+  transit?: boolean;
+  walking?: boolean;
+  bike?: boolean;
+  rideshare?: boolean;
+}
+
 /**
- * User preferences for route planning
+ * User preferences for route planning and app settings
  */
 export interface RoutePreferences {
-  /**
-   * Maximum walking distance in meters
-   */
-  maxWalkDistance?: number;
-  
-  /**
-   * Maximum number of transfers
-   */
+  // Route planning preferences
+  maxWalkDistance: number;
   maxTransfers?: number;
   
-  /**
-   * Modes of transportation to include
-   */
-  modes?: {
-    transit?: boolean;
-    walking?: boolean;
-    bike?: boolean;
-    rideshare?: boolean;
-  };
+  // Transport modes
+  modes: TransportModes;
   
-  /**
-   * Accessibility requirements
-   */
-  accessibility?: {
-    wheelchair?: boolean;
-    stepFreeAccess?: boolean;
-    elevatorFreeAccess?: boolean;
-  };
+  // Accessibility settings
+  accessibility: PhysicalAccessibility;
   
+  // Visual accessibility settings
+  visualAccessibility: VisualAccessibility;
+  
+  // UI preferences
+  theme: 'light' | 'dark' | 'system';
+  language: string;
+  favoriteRoutes: string[];
+  preferredTransport: string[];
+  notificationPreferences: NotificationPreferences;
+  
+  // Route preferences
   /**
    * Avoid crowded vehicles if possible
    */
-  avoidCrowds?: boolean;
+  avoidCrowds: boolean;
   
   /**
    * Prioritize speed over comfort
    */
-  prioritizeSpeed?: boolean;
+  prioritizeSpeed: boolean;
   
   /**
    * Maximum price in the smallest currency unit (e.g., cents)

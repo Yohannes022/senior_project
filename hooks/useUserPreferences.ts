@@ -10,17 +10,50 @@ interface UseUserPreferencesProps {
 export const useUserPreferences = ({ userId, initialPreferences = {} }: UseUserPreferencesProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [preferences, setPreferences] = useState<RoutePreferences>({
+  const [preferences, setPreferences] = useState<RoutePreferences>(() => ({
+    // Route planning preferences
     maxWalkDistance: 1000, // Default to 1km
+    maxTransfers: 3, // Default max transfers
     avoidCrowds: false,
     prioritizeSpeed: false,
+    maxPrice: undefined,
+    
+    // Transport modes
+    modes: {
+      transit: true,
+      walking: true,
+      bike: true,
+      rideshare: true,
+    },
+    
+    // Accessibility settings
     accessibility: {
       wheelchair: false,
       stepFreeAccess: false,
       elevatorFreeAccess: false,
     },
+    
+    // Visual accessibility settings
+    visualAccessibility: {
+      fontSize: 'medium',
+      highContrast: false,
+      screenReader: false,
+    },
+    
+    // UI preferences
+    theme: 'system',
+    language: 'en',
+    favoriteRoutes: [],
+    preferredTransport: ['bus', 'train'],
+    notificationPreferences: {
+      email: true,
+      push: true,
+      sms: false,
+    },
+    
+    // Apply any initial preferences last to allow overrides
     ...initialPreferences,
-  });
+  }));
 
   // Initialize the service and load preferences
   useEffect(() => {
