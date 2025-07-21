@@ -1,12 +1,12 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { View, Text } from "react-native";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import Colors from "@/constants/colors";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { useUserPreferences } from "@/hooks/useUserPreferences";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -37,66 +37,36 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <RootLayoutNav />
-    </AuthProvider>
+    <SafeAreaView style={styles.container} edges={['top', 'right', 'left', 'bottom']}>
+      <AuthProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: styles.screenContent,
+            animation: 'fade',
+          }}
+        >
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="booking" />
+          <Stack.Screen name="all-trips" />
+          <Stack.Screen name="add-vehicle" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </AuthProvider>
+    </SafeAreaView>
   );
 }
 
-function RootLayoutNav() {
-  return (
-    <>
-      <Stack
-        screenOptions={{
-          headerBackTitle: "Back",
-        }}
-      >
-        <Stack.Screen 
-          name="(tabs)" 
-          options={{ 
-            headerShown: false,
-            title: 'Sheger Transit',
-          }} 
-        />
-<Stack.Screen 
-          name="booking" 
-          options={{ 
-            title: 'Book a Ride',
-            headerStyle: {
-              backgroundColor: Colors.primary,
-            },
-            headerTintColor: '#fff',
-          }} 
-        />
-        <Stack.Screen 
-          name="all-trips" 
-          options={{ 
-            title: 'My Trips',
-            headerStyle: {
-              backgroundColor: Colors.primary,
-            },
-            headerTintColor: '#fff',
-          }} 
-        />
-        <Stack.Screen 
-          name="add-vehicle" 
-          options={{ 
-            title: 'Add Vehicle',
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: Colors.primary,
-            },
-            headerTintColor: '#fff',
-          }} 
-        />
-        <Stack.Screen 
-          name="+not-found" 
-          options={{ 
-            title: 'Not Found',
-            headerShown: false,
-          }} 
-        />
-      </Stack>
-    </>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    width: '100%',
+    height: '100%',
+  },
+  screenContent: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+});

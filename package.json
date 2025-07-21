@@ -2,17 +2,29 @@
   "name": "shegertransit",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "init-db": "node init-db.js",
+    "emulator:start": "node scripts/start-emulator.js",
+    "emulator:import": "firebase emulators:start --import=./emulator-data",
+    "emulator:export": "firebase emulators:export ./emulator-data",
+    "dev": "concurrently \"npm run emulator:start\" \"expo start\" --names \"Firebase,Expo\""
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/geolocation": "^3.4.0",
     "@react-navigation/bottom-tabs": "^7.4.2",
     "@react-navigation/elements": "^2.5.2",
     "@react-navigation/native": "^7.1.14",
@@ -25,6 +37,7 @@
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
     "expo": "~53.0.9",
+    "expo-application": "^6.1.5",
     "expo-barcode-generator": "^4.0.0",
     "expo-barcode-scanner": "^13.0.1",
     "expo-blur": "~14.1.4",
@@ -36,6 +49,7 @@
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.7",
     "expo-image-manipulator": "^13.1.7",
+    "expo-image-picker": "^16.1.4",
     "expo-linking": "~7.1.5",
     "expo-location": "^18.1.5",
     "expo-media-library": "^17.1.7",
@@ -60,6 +74,7 @@
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-maps": "1.20.1",
     "react-native-qrcode-svg": "^6.3.15",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
@@ -72,6 +87,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@react-native-community/cli": "latest",
+    "@types/estree": "^1.0.8",
     "@types/react": "^19.1.8",
     "@types/react-native": "^0.72.8",
     "eslint": "^9.25.0",
