@@ -1,12 +1,71 @@
 import React from "react";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, type RelativePathString } from 'expo-router';
 import { MapPin, CreditCard, Award, Settings, Bell, HelpCircle, LogOut } from "lucide-react-native";
 import Colors from "@/constants/colors";
-import { userProfile } from "@/constants/mockData";
+import { useAuth } from '@/contexts/AuthContext'; // Fix the syntax error by removing the curly brackets
 
-const ProfileMenuItem = ({ icon, title, subtitle, rightElement, onPress }: any) => (
+type RouteWithGroups = 
+  | `/(auth)/${string}`
+  | `/(tabs)/${string}`
+  | `/${string}`;
+
+type AppRoute = 
+  | '/all-trips'
+  | '/booking'
+  | '/destination'
+  | '/directions'
+  | '/rewards'
+  | '/search'
+  | '/trip-details'
+  | '/(tabs)/profile'
+  | '/(tabs)/map'
+  | '/(tabs)/schedule'
+  | '/edit-profile'
+  | '/payment-methods'
+  | '/notifications'
+  | '/settings'
+  | '/help'
+  | '/saved-places'
+  | `saved-location/${string}`
+  | `/(auth)/login`
+  | `/(auth)/register`
+  | `/(auth)/forgot-password`
+  | `/(tabs)/profile`
+  | `/(tabs)/map`
+  | `/(tabs)/schedule`
+  | `/(tabs)/profile/edit`
+  | `/(tabs)/profile/settings`
+  | `/(tabs)/profile/help`
+  | `/(tabs)/profile/notifications`
+  | `/(tabs)/profile/payment-methods`
+  | `/(tabs)/profile/saved-places`
+  | `/(tabs)/profile/trip-history`
+  | `/(tabs)/profile/help`
+  | `/(tabs)/profile/about`
+  | `/(tabs)/profile/terms`
+  | `/(tabs)/profile/privacy`
+  | `/(tabs)/profile/contact`
+  | `/(tabs)/profile/feedback`
+  | `/(tabs)/profile/rate-app`
+  | `/(tabs)/profile/share-app`
+  | `/(tabs)/profile/invite-friends`
+  | `/(tabs)/profile/support`
+  | `/(tabs)/profile/faq`
+  | `/(tabs)/profile/contact-support`
+  | `/(tabs)/profile/report-issue`
+  | `saved-location/${string}`;
+
+interface ProfileMenuItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  rightElement?: React.ReactNode;
+  onPress: () => void;
+}
+
+const ProfileMenuItem = ({ icon, title, subtitle, rightElement, onPress }: ProfileMenuItemProps) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress}>
     <View style={styles.menuIconContainer}>
       {icon}
@@ -22,30 +81,48 @@ const ProfileMenuItem = ({ icon, title, subtitle, rightElement, onPress }: any) 
 );
 
 export default function ProfileScreen() {
+  const { user, isLoading, logout } = useAuth();
   const router = useRouter();
-
-  // Define valid route names as a type
-  type AppRoute = 
-    | '/all-trips'
-    | '/booking'
-    | '/destination'
-    | '/directions'
-    | '/rewards'
-    | '/search'
-    | '/trip-details'
-    | '/(tabs)/profile'
-    | '/(tabs)/map'
-    | '/(tabs)/schedule'
-    | '/edit-profile'
-    | '/payment-methods'
-    | '/notifications'
-    | '/settings'
-    | '/help'
-    | '/saved-places'
-    | `/saved-location?id=${string}`;
+  
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+  
+  if (!user) {
+    // Handle case where user is not logged in
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.errorText}>Please log in to view your profile</Text>
+        <TouchableOpacity 
+          style={styles.loginButton}
+          onPress={() => {
+            router.push('/(auth)/login' as RelativePathString);
+          }}
+        >
+          <Text style={styles.loginButtonText}>Go to Login</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const handleNavigation = (route: AppRoute) => {
-    router.push(route as any);
+    router.push(route as RelativePathString);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.replace('/(auth)/login' as RelativePathString);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+  const handleEditProfile = () => {
+    router.push('/edit-profile' as RelativePathString);
   };
 
   return (
@@ -57,19 +134,22 @@ export default function ProfileScreen() {
         
         <View style={styles.profileCard}>
           <Image
-            source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" }}
+            source={{ 
+              uri: user?.profilePicture || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
+              cache: 'force-cache'
+            }}
             style={styles.profileImage}
           />
           
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{userProfile.name}</Text>
-            <Text style={styles.profilePhone}>{userProfile.phone}</Text>
-            <Text style={styles.profileEmail}>{userProfile.email}</Text>
+            <Text style={styles.profileName}>{user?.name || 'User'}</Text>
+            <Text style={styles.profilePhone}>{user?.phone || 'No phone number'}</Text>
+            <Text style={styles.profileEmail}>{user?.email || 'No email'}</Text>
           </View>
           
           <TouchableOpacity 
             style={styles.editButton}
-            onPress={() => handleNavigation("/edit-profile")}
+            onPress={handleEditProfile}
           >
             <Text style={styles.editButtonText}>Edit</Text>
           </TouchableOpacity>
@@ -77,17 +157,17 @@ export default function ProfileScreen() {
         
         <TouchableOpacity 
           style={styles.pointsCard}
-          onPress={() => handleNavigation("/rewards")}
+          onPress={() => handleNavigation('/rewards')}
         >
           <View style={styles.pointsInfo}>
-            <Text style={styles.pointsValue}>{userProfile.points}</Text>
+            <Text style={styles.pointsValue}>0</Text>
             <Text style={styles.pointsLabel}>Sheger Points</Text>
           </View>
           
           <View style={styles.levelContainer}>
             <Text style={styles.levelLabel}>Current Level</Text>
             <View style={styles.levelBadge}>
-              <Text style={styles.levelText}>{userProfile.level}</Text>
+              <Text style={styles.levelText}>1</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -100,22 +180,28 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           </View>
           
-          {userProfile.savedLocations.slice(0, 2).map((location) => (
+          {/* Temporarily showing empty state for saved locations */}
+          <View style={styles.emptyStateContainer}>
+            <Text style={styles.emptyStateText}>No saved locations yet</Text>
+          </View>
+          {/* Display saved locations if they exist */}
+          {user?.savedLocations?.slice(0, 2).map((location) => (
             <ProfileMenuItem
               key={location.id}
               icon={<MapPin size={20} color={Colors.primary} />}
               title={location.name}
               subtitle={location.address}
-              onPress={() => handleNavigation(`/saved-location?id=${location.id}`)}
+              onPress={() => handleNavigation(`saved-location/${location.id}`)}
             />
           ))}
           
-          {userProfile.savedLocations.length > 2 && (
+          {/* Show 'more places' if there are more than 2 saved locations */}
+          {user?.savedLocations && user.savedLocations.length > 2 && (
             <TouchableOpacity 
               style={styles.viewAllButton}
               onPress={() => handleNavigation('/saved-places')}
             >
-              <Text style={styles.viewAllButtonText}>+{userProfile.savedLocations.length - 2} more places</Text>
+              <Text style={styles.viewAllButtonText}>+{user.savedLocations.length - 2} more places</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -126,58 +212,44 @@ export default function ProfileScreen() {
           <ProfileMenuItem
             icon={<CreditCard size={20} color={Colors.primary} />}
             title="Payment Methods"
-            subtitle="Add or manage payment options"
-            onPress={() => handleNavigation("/payment-methods")}
+            onPress={() => handleNavigation('/payment-methods')}
           />
           
           <ProfileMenuItem
             icon={<Award size={20} color={Colors.primary} />}
-            title="Rewards & Points"
-            subtitle="View your rewards history"
-            rightElement={
-              <View style={styles.pointsBadge}>
-                <Text style={styles.pointsBadgeText}>{userProfile.points}</Text>
-              </View>
-            }
-            onPress={() => handleNavigation("/rewards")}
+            title="Rewards"
+            subtitle="Earn points on every ride"
+            onPress={() => handleNavigation('/rewards')}
           />
           
           <ProfileMenuItem
             icon={<Bell size={20} color={Colors.primary} />}
             title="Notifications"
-            subtitle="Manage your notification preferences"
-            onPress={() => handleNavigation("/notifications")}
+            onPress={() => handleNavigation('/notifications')}
           />
           
           <ProfileMenuItem
             icon={<Settings size={20} color={Colors.primary} />}
             title="Settings"
-            subtitle="App preferences and account settings"
-            onPress={() => handleNavigation("/settings")}
+            onPress={() => handleNavigation('/settings')}
           />
-        </View>
-        
-        <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>Support</Text>
           
           <ProfileMenuItem
             icon={<HelpCircle size={20} color={Colors.primary} />}
-            title="Help Center"
-            subtitle="Get help with your account or trips"
-            onPress={() => handleNavigation("/help")}
+            title="Help & Support"
+            onPress={() => handleNavigation('/help')}
           />
           
           <ProfileMenuItem
             icon={<LogOut size={20} color={Colors.danger} />}
-            title="Sign Out"
-            subtitle="Log out from your account"
-            onPress={() => console.log("Sign out")}
+            title="Logout"
+            onPress={handleLogout}
           />
         </View>
         
         <View style={styles.footer}>
           <Text style={styles.footerText}>Sheger Transit+ v1.0.0</Text>
-          <Text style={styles.footerText}>© 2025 Sheger Transit Authority</Text>
+          <Text style={styles.footerText}> 2025 Sheger Transit Authority</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -188,6 +260,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.background,
+    padding: 20,
+  },
+  errorText: {
+    color: Colors.text,
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  loginButton: {
+    backgroundColor: Colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  loginButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  emptyStateContainer: {
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyStateText: {
+    color: Colors.textLight,
+    fontSize: 14,
+    textAlign: 'center',
   },
   header: {
     paddingHorizontal: 16,

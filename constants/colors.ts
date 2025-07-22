@@ -1,3 +1,5 @@
+import { error } from "console";
+
 export default {
     // Brand colors
     primary: "#3B82F6",
@@ -21,6 +23,7 @@ export default {
     warning: "#F59E0B",
     danger: "#EF4444",
     info: "#3B82F6",
+    error: "#EF4444",
     
     // UI colors
     border: "#E2E8F0",
@@ -28,6 +31,10 @@ export default {
     divider: "#E2E8F0",
     
     // Additional colors
-    overlay: "rgba(0, 0, 0, 0.5)",
     shadow: "rgba(0, 0, 0, 0.1)",
+    overlay: "rgba(0, 0, 0, 0.5)",
+    
+    // New colors for location header
+    grayLight: "#F1F5F9",
+    gray: "#94A3B8",
   } as const;

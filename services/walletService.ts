@@ -2,8 +2,6 @@ import * as SecureStore from 'expo-secure-store';
 import * as Crypto from 'expo-crypto';
 import { WalletBalance, WalletTransaction, TopUpRequest, PaymentRequest, QRPaymentData, PaymentVerificationResult } from '@/types/wallet';
 
-const WALLET_BALANCE_KEY = '@wallet_balance';
-const WALLET_TRANSACTIONS_KEY = '@wallet_transactions';
 const POINTS_RATE = 0.1; // 1 point per 10 ETB
 
 export class WalletService {
@@ -18,17 +16,42 @@ export class WalletService {
     return WalletService.instance;
   }
 
+  // Helper to create a valid SecureStore key
+  private getWalletKey(userId: string): string {
+    // Remove any characters that aren't alphanumeric, ., -, or _
+    const safeUserId = userId.replace(/[^a-zA-Z0-9._-]/g, '_');
+    return `@wallet_${safeUserId}`;
+  }
+
+  // Helper to create a valid SecureStore key for transactions
+  private getTransactionsKey(userId: string): string {
+    // Remove any characters that aren't alphanumeric, ., -, or _
+    const safeUserId = userId.replace(/[^a-zA-Z0-9._-]/g, '_');
+    return `@wallet_transactions_${safeUserId}`;
+  }
+
   // Get wallet balance
   async getWalletBalance(userId: string): Promise<WalletBalance> {
     try {
-      const balanceJson = await SecureStore.getItemAsync(`${WALLET_BALANCE_KEY}_${userId}`);
+      if (!userId) {
+        throw new Error('User ID is required');
+      }
+      
+      const key = this.getWalletKey(userId);
+      const balanceJson = await SecureStore.getItemAsync(key);
+      
       if (balanceJson) {
         return JSON.parse(balanceJson);
       }
+      
       // Initialize new wallet if doesn't exist
       return this.initializeWallet(userId);
     } catch (error) {
-      console.error('Error getting wallet balance:', error);
+      console.error('Error getting wallet balance:', {
+        error,
+        userId,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      });
       throw new Error('Failed to retrieve wallet balance');
     }
   }
@@ -41,32 +64,50 @@ export class WalletService {
       points: 0,
       lastUpdated: new Date()
     };
-    await SecureStore.setItemAsync(
-      `${WALLET_BALANCE_KEY}_${userId}`, 
-      JSON.stringify(newBalance)
-    );
-    return newBalance;
+    
+    try {
+      const key = this.getWalletKey(userId);
+      await SecureStore.setItemAsync(key, JSON.stringify(newBalance));
+      return newBalance;
+    } catch (error) {
+      console.error('Error initializing wallet:', {
+        error,
+        userId,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      });
+      throw new Error('Failed to initialize wallet');
+    }
   }
 
   // Add money to wallet
   async topUpWallet(userId: string, request: TopUpRequest): Promise<WalletBalance> {
     try {
-      const balance = await this.getWalletBalance(userId);
+      // Validate input
+      if (!userId) {
+        throw new Error('User ID is required');
+      }
       
-      // In a real app, you would integrate with payment gateway here
-      // For now, we'll simulate a successful payment
+      if (isNaN(request.amount) || request.amount <= 0) {
+        throw new Error(`Invalid amount: ${request.amount}`);
+      }
+      
+      if (!['chapa', 'telebirr', 'bank_transfer'].includes(request.paymentMethod)) {
+        throw new Error(`Invalid payment method: ${request.paymentMethod}`);
+      }
+      
+      // Get current balance
+      const balance = await this.getWalletBalance(userId);
       
       // Update balance
       const updatedBalance: WalletBalance = {
         ...balance,
-        availableBalance: balance.availableBalance + request.amount,
+        availableBalance: Number((balance.availableBalance + request.amount).toFixed(2)), // Ensure 2 decimal places
         lastUpdated: new Date()
       };
       
-      await SecureStore.setItemAsync(
-        `${WALLET_BALANCE_KEY}_${userId}`,
-        JSON.stringify(updatedBalance)
-      );
+      // Save updated balance
+      const key = this.getWalletKey(userId);
+      await SecureStore.setItemAsync(key, JSON.stringify(updatedBalance));
       
       // Record transaction
       await this.recordTransaction({
@@ -74,15 +115,21 @@ export class WalletService {
         userId,
         amount: request.amount,
         type: 'topup',
-        description: `Top up via ${request.paymentMethod}`,
+        description: `Top up via ${request.paymentMethod}${request.reference ? ` (${request.reference})` : ''}`,
         timestamp: new Date(),
-        status: 'completed'
+        status: 'completed',
+        referenceId: request.reference
       });
       
       return updatedBalance;
     } catch (error) {
-      console.error('Error topping up wallet:', error);
-      throw new Error('Failed to process top-up');
+      console.error('Error in topUpWallet:', {
+        error,
+        userId,
+        request,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      });
+      throw new Error(`Failed to process top-up: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -106,10 +153,8 @@ export class WalletService {
         lastUpdated: new Date()
       };
       
-      await SecureStore.setItemAsync(
-        `${WALLET_BALANCE_KEY}_${userId}`,
-        JSON.stringify(updatedBalance)
-      );
+      const key = this.getWalletKey(userId);
+      await SecureStore.setItemAsync(key, JSON.stringify(updatedBalance));
       
       // Record transaction
       const transactionId = `tx_${Crypto.randomUUID()}`;
@@ -213,7 +258,8 @@ export class WalletService {
   // Get transaction history
   async getTransactionHistory(userId: string, limit: number = 20): Promise<WalletTransaction[]> {
     try {
-      const transactionsJson = await SecureStore.getItemAsync(`${WALLET_TRANSACTIONS_KEY}_${userId}`);
+      const key = this.getTransactionsKey(userId);
+      const transactionsJson = await SecureStore.getItemAsync(key);
       if (!transactionsJson) return [];
       
       const transactions: WalletTransaction[] = JSON.parse(transactionsJson);
@@ -229,13 +275,11 @@ export class WalletService {
   // Record a transaction
   private async recordTransaction(transaction: WalletTransaction): Promise<void> {
     try {
+      const key = this.getTransactionsKey(transaction.userId);
       const transactions = await this.getTransactionHistory(transaction.userId, 1000); // Get all transactions
       transactions.unshift(transaction);
       
-      await SecureStore.setItemAsync(
-        `${WALLET_TRANSACTIONS_KEY}_${transaction.userId}`,
-        JSON.stringify(transactions)
-      );
+      await SecureStore.setItemAsync(key, JSON.stringify(transactions));
     } catch (error) {
       console.error('Error recording transaction:', error);
     }

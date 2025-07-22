@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "user@example.com",
+      "name": "Demo User",
+      "phone": "+1234567890",
+      "dateOfBirth": "1990-01-01",
+      "profilePicture": "",
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "updatedAt": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "transitStops": [
+    {
+      "id": "stop1",
+      "name": "Bus Stop - Bole Road",
+      "type": "bus",
+      "location": {
+        "latitude": 9.0123,
+        "longitude": 38.7890
+      },
+      "distance": 250,
+      "routes": ["22", "45"]
+    },
+    {
+      "id": "stop2",
+      "name": "Train Station - Mexico",
+      "type": "train",
+      "location": {
+        "latitude": 9.0150,
+        "longitude": 38.7654
+      },
+      "distance": 1200,
+      "routes": ["Blue Line"]
+    }
+  ],
+  "trips": [],
+  "favorites": []
+}

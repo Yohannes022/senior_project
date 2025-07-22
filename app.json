@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "app.rork.sheger-transit"
+      "package": "com.yohannest.shegertransit"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -45,6 +45,7 @@
       "eas": {
         "projectId": "679ccb8a-cc6f-4990-b80e-c33188d55a14"
       }
-    }
+    },
+    "owner": "yohannes_t"
   }
 }

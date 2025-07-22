@@ -22,12 +22,12 @@ const PaymentScreen = () => {
   const amount = parseFloat(params.amount || '0');
   const isWalletTopup = params.type === 'wallet-topup';
 
-  // Mock payment methods - in a real app, these would come from your API
+  // Update payment methods to use the correct payment method types
   const paymentMethods = [
-    { id: 'sheger_wallet', name: 'Sheger Wallet', icon: 'wallet' },
-    { id: 'telebirr', name: 'Telebirr', icon: 'phone-portrait' },
-    { id: 'cbe_birr', name: 'CBE Birr', icon: 'card' },
-    { id: 'visa', name: 'Visa/Mastercard', icon: 'card' },
+    { id: 'sheger_wallet', name: 'Sheger Wallet', icon: 'wallet', paymentMethod: 'chapa' as const },
+    { id: 'telebirr', name: 'Telebirr', icon: 'phone-portrait', paymentMethod: 'telebirr' as const },
+    { id: 'cbe_birr', name: 'CBE Birr', icon: 'card', paymentMethod: 'bank_transfer' as const },
+    { id: 'visa', name: 'Visa/Mastercard', icon: 'card', paymentMethod: 'chapa' as const },
   ];
 
   useEffect(() => {
@@ -48,9 +48,18 @@ const PaymentScreen = () => {
     
     try {
       if (isWalletTopup) {
-        // Handle wallet top-up
-        await walletService.topUp(user.id, amount, {
-          paymentMethod: selectedMethod,
+        // Get the selected payment method
+        const method = paymentMethods.find(m => m.id === selectedMethod);
+        if (!method) {
+          Alert.alert('Error', 'Invalid payment method selected');
+          setProcessing(false);
+          return;
+        }
+        
+        // Handle wallet top-up with the correct payment method type
+        await walletService.topUpWallet(user.id, {
+          amount,
+          paymentMethod: method.paymentMethod,
           reference: `topup-${Date.now()}`,
         });
         
@@ -64,7 +73,26 @@ const PaymentScreen = () => {
       }
     } catch (error) {
       console.error('Payment error:', error);
-      Alert.alert('Error', 'Failed to process payment. Please try again.');
+      let errorMessage = 'Failed to process payment. Please try again.';
+      
+      // Provide more specific error messages based on the error type
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+        
+        if (error.message.includes('Invalid user ID')) {
+          errorMessage = 'Invalid user account. Please sign in again.';
+        } else if (error.message.includes('payment method')) {
+          errorMessage = 'Invalid payment method selected.';
+        } else if (error.message.includes('network')) {
+          errorMessage = 'Network error. Please check your connection.';
+        }
+      }
+      
+      Alert.alert('Payment Error', errorMessage);
     } finally {
       setProcessing(false);
     }
@@ -178,7 +206,7 @@ const styles = StyleSheet.create({
   },
   amountLabel: {
     fontSize: 16,
-    color: Colors.textSecondary,
+    color: Colors.secondary,
     marginBottom: 8,
   },
   amount: {
@@ -192,7 +220,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: Colors.secondary,
     marginBottom: 12,
     paddingHorizontal: 4,
   },
@@ -214,7 +242,7 @@ const styles = StyleSheet.create({
   paymentMethodText: {
     fontSize: 16,
     marginLeft: 12,
-    color: Colors.textPrimary,
+    color: Colors.secondary,
     flex: 1,
   },
   paymentMethodTextSelected: {

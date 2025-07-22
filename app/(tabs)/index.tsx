@@ -7,7 +7,7 @@ import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import ProfileHeader from "@/components/ProfileHeader";
+import LocationHeader from "@/components/LocationHeader";
 import TripPlanner from "@/components/TripPlanner";
 import NearbyVehicles from "@/components/NearbyVehicls";
 import TerminalVehicles from "@/components/TerminalVehicles";
@@ -22,12 +22,13 @@ export default function HomeScreen() {
     router.push("/booking");
   };
 
-  const handleVehicleSelect = (vehicle: any) => {
+  const handleVehicleSelect = (vehicle: { id: string }) => {
     // Navigate to vehicle details page with the selected vehicle's id
+    // Using the correct type for the route path
     router.push({
-      pathname: '/(tabs)/vehicle-details/[id]',
+      pathname: "/vehicle-details/[id]",
       params: { id: vehicle.id }
-    });
+    } as any);
   };
 
   const handleTripDetails = (tripId: string) => {
@@ -41,7 +42,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
-      <ProfileHeader />
+      <LocationHeader />
       
       <ScrollView 
         showsVerticalScrollIndicator={false}

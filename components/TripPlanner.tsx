@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from "react-native";
 import { MapPin, Calendar, Clock, ArrowRight, RotateCcw } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import * as Location from 'expo-location';
 import Colors from "@/constants/colors";
 
 type TripPlannerProps = {
@@ -8,9 +10,94 @@ type TripPlannerProps = {
 };
 
 export default function TripPlanner({ onPlanTrip }: TripPlannerProps) {
+  const router = useRouter();
   const [from, setFrom] = useState("Current Location");
   const [to, setTo] = useState("");
   const [isNow, setIsNow] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFindRoutes = useCallback(async () => {
+    if (!to.trim()) {
+      Alert.alert("Destination Required", "Please enter a destination");
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // If the user wants to use current location
+      if (from === "Current Location") {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert("Permission Denied", "Location permission is required to find routes from your current location");
+          return;
+        }
+        
+        const location = await Location.getCurrentPositionAsync({});
+        const currentLocation = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        
+        // Get address from current coordinates for display
+        const address = await Location.reverseGeocodeAsync(currentLocation);
+        const displayAddress = address[0]?.name || 'Current Location';
+        
+        // Navigate to map screen with current location and destination
+        router.push({
+          pathname: "/map-screen",
+          params: {
+            origin: JSON.stringify(currentLocation),
+            originName: displayAddress,
+            destination: to,
+            departureTime: isNow ? 'now' : 'schedule'
+          }
+        });
+      } else {
+        // For manual from address, we'll let the map screen handle geocoding
+        router.push({
+          pathname: "/map-screen",
+          params: {
+            origin: from,
+            destination: to,
+            departureTime: isNow ? 'now' : 'schedule'
+          }
+        });
+      }
+      
+      // Call the onPlanTrip callback if provided
+      if (onPlanTrip) {
+        onPlanTrip();
+      }
+    } catch (error) {
+      console.error("Error getting location:", error);
+      Alert.alert("Error", "Failed to get your current location. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [from, to, isNow, router, onPlanTrip]);
+
+  const handleSearchPress = () => {
+    router.push({
+      pathname: "/search",
+      params: { 
+        type: 'to',
+        currentFrom: from === "Current Location" ? '' : from,
+        currentTo: to 
+      }
+    });
+  };
+  
+  const handleFromPress = () => {
+    router.push({
+      pathname: "/search",
+      params: {
+        type: 'from',
+        currentFrom: from === "Current Location" ? '' : from,
+        currentTo: to
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -19,14 +106,23 @@ export default function TripPlanner({ onPlanTrip }: TripPlannerProps) {
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
           <MapPin size={20} color={Colors.primary} />
-          <TextInput
-            style={styles.input}
-            placeholder="From"
-            value={from}
-            onChangeText={setFrom}
-          />
-          <TouchableOpacity>
-            <RotateCcw size={18} color={Colors.textLight} />
+          <TouchableOpacity 
+            style={styles.locationText}
+            onPress={handleFromPress}
+          >
+            <Text style={styles.inputText} numberOfLines={1}>
+              {from}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              // Swap from and to
+              const temp = from;
+              setFrom(to || "Current Location");
+              setTo(temp === "Current Location" ? "" : temp);
+            }}
+          >
+            <RotateCcw size={18} color={Colors.primary} />
           </TouchableOpacity>
         </View>
         
@@ -34,12 +130,21 @@ export default function TripPlanner({ onPlanTrip }: TripPlannerProps) {
         
         <View style={styles.inputRow}>
           <MapPin size={20} color={Colors.secondary} />
-          <TextInput
-            style={styles.input}
-            placeholder="To"
-            value={to}
-            onChangeText={setTo}
-          />
+          <TouchableOpacity 
+            style={styles.locationText}
+            onPress={() => router.push({
+              pathname: "/search",
+              params: { 
+                type: 'to',
+                currentFrom: from === "Current Location" ? '' : from,
+                currentTo: to
+              }
+            })}
+          >
+            <Text style={[styles.inputText, !to && { color: Colors.textLight }]} numberOfLines={1}>
+              {to || "Where to?"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       
@@ -61,7 +166,11 @@ export default function TripPlanner({ onPlanTrip }: TripPlannerProps) {
         </TouchableOpacity>
       </View>
       
-      <TouchableOpacity style={styles.planButton} onPress={onPlanTrip}>
+      <TouchableOpacity 
+        style={[styles.planButton, isLoading && styles.planButtonDisabled]}
+        onPress={handleFindRoutes}
+        disabled={isLoading}
+      >
         <Text style={styles.planButtonText}>Find Routes</Text>
         <ArrowRight size={18} color="#FFFFFF" />
       </TouchableOpacity>
@@ -70,6 +179,23 @@ export default function TripPlanner({ onPlanTrip }: TripPlannerProps) {
 }
 
 const styles = StyleSheet.create({
+  inputText: {
+    flex: 1,
+    fontSize: 16,
+    color: Colors.text,
+    marginLeft: 12,
+    marginRight: 8,
+  },
+  locationText: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingVertical: 8,
+    marginLeft: 12,
+    marginRight: 8,
+  },
+  planButtonDisabled: {
+    opacity: 0.7,
+  },
   container: {
     backgroundColor: Colors.card,
     borderRadius: 16,

@@ -157,7 +157,7 @@ export default function TripDetailsScreen() {
           
           <TouchableOpacity 
             style={styles.actionButton}
-            onPress={() => router.push("/booking")}
+            onPress={() => router.push("/booking" as any)}
           >
             <Text style={styles.actionButtonText}>Book Similar Trip</Text>
           </TouchableOpacity>

@@ -23,6 +23,7 @@ export interface TopUpRequest {
   paymentMethod: 'chapa' | 'telebirr' | 'bank_transfer';
   phoneNumber?: string; // For mobile money
   bankAccount?: string; // For bank transfers
+  reference?: string;   // For transaction tracking
 }
 
 export interface PaymentRequest {
@@ -47,4 +48,3 @@ export interface PaymentVerificationResult {
   transactionId?: string;
   newBalance?: number;
 }
- 
